@@ -13,6 +13,7 @@ app.use(express.json()); // Parse JSON bodies
 
 // Serve frontend files
 const FRONTEND = path.resolve(__dirname, '..', 'frontend');
+console.log('Frontend path:', FRONTEND);
 app.use(express.static(FRONTEND));
 
 // API routes - my portfolio endpoints
