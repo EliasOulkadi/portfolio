@@ -1,7 +1,7 @@
 {
   "name": "portfolio-backend",
   "version": "1.0.0",
-  "description": "Backend API for my portfolio - Node.js, Express, JWT auth, Supabase integration",
+  "description": "Backend API for portfolio application - Node.js, Express, JWT authentication, Supabase database",
   "main": "server.js",
   "author": "Elias Oulkadi",
   "scripts": {
@@ -27,7 +27,8 @@
     "jwt",
     "supabase",
     "rest-api",
-    "full-stack"
+    "full-stack",
+    "backend"
   ],
   "license": "MIT"
 }

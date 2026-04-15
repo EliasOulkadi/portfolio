@@ -1,7 +1,7 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
 
-/* ── TYPING ANIMATION ── */
+/* -- TYPING ANIMATION -- */
 const phrases = [
   'Node.js · Express · REST APIs',
   'SQL · Supabase · PostgreSQL',
@@ -25,7 +25,7 @@ function typeLoop() {
 }
 typeLoop();
 
-/* ── NAV SCROLLSPY ── */
+/* -- NAVIGATION SCROLLSPY -- */
 const navLinks = document.querySelectorAll('.nav-links a');
 const sections = document.querySelectorAll('section[id]');
 
@@ -41,7 +41,7 @@ const spyObserver = new IntersectionObserver((entries) => {
 
 sections.forEach(s => spyObserver.observe(s));
 
-/* ── REVEAL ANIMATIONS (staggered) ── */
+/* -- REVEAL ANIMATIONS (staggered effect) -- */
 function observeReveal() {
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
@@ -630,7 +630,6 @@ function updateAnnotations() {
 
   /* PROJECTS */
   if (vis('#work', 60)) {
-    drawAnn(svg, '#project-filters', ['tag filters', 'JS Set() built from DB .tech field'], 'bottom');
     drawAnn(svg, '#projects-grid',   ['fetch /api/projects', 'rendered by renderProjects()'], 'right');
   }
 
@@ -642,7 +641,7 @@ function updateAnnotations() {
     drawAnn(svg, '#req-tasks .api-path',     ['GET /api/tasks', 'JWT guard -- verifies Bearer token'],     'left');
     drawAnn(svg, '.api-auth-badge',          ['JWT required', 'req.headers.authorization guard'],         'right');
     drawAnn(svg, '.api-body-pre',            ['Request body', 'JSON sent with fetch() POST'],             'left');
-    drawAnn(svg, '.api-demo-cta',            ['Admin panel -->', 'full CRUD: tasks / projects / msgs'],     'right');
+    drawAnn(svg, '.api-demo-cta',            ['Admin panel', 'full CRUD: tasks / projects / msgs'],     'right');
   }
 
   /* STACK */
@@ -651,7 +650,7 @@ function updateAnnotations() {
     drawAnn(svg, '.stack-group:nth-child(6)', ['Creative tools', 'DaVinci · Premiere · C4D'],       'right');
   }
 
-  /* COURSES */
+  /* EDUCATION */
   if (vis('#courses', 60)) {
     drawAnn(svg, '#courses .section-header',    ['Section 04', 'Education -- all self-taught'],              'left');
     drawAnn(svg, '.course-group:nth-child(1)',  ['freeCodeCamp', '4 certifications completed'],             'left');
@@ -672,8 +671,6 @@ function updateAnnotations() {
   /* CONTACT */
   if (vis('#contact', 40)) {
     drawAnn(svg, '#contact .section-header',    ['Section 06', 'Contact -- stored in Supabase'],            'left');
-    drawAnn(svg, '#cf-name',                    ['<input type="text">', 'HTML5 required attribute'],        'left');
-    drawAnn(svg, '#cf-email',                   ['<input type="email">', 'native browser validation'],      'left');
     drawAnn(svg, '#cf-message',                 ['<textarea required>', 'resize: vertical CSS'],            'left');
     drawAnn(svg, '#form-submit',                ['fetch() POST /api/contact', 'disabled during req --> re-enabled'], 'right');
     drawAnn(svg, '.contact-links',              ['Direct links', 'email / GitHub / LinkedIn hrefs'],        'right');

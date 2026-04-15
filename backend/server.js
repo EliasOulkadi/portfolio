@@ -1,4 +1,4 @@
-// Portfolio Backend - My personal server
+// Portfolio Backend - Full Stack Application
 require('dotenv').config();
 
 const express = require('express');
@@ -7,35 +7,35 @@ const path    = require('path');
 
 const app = express();
 
-// Middleware setup
-app.use(cors()); // Allow frontend to talk to backend
-app.use(express.json()); // Parse JSON bodies
+// Middleware configuration
+app.use(cors()); // Enable cross-origin requests
+app.use(express.json()); // Parse JSON request bodies
 
-// Serve frontend files
+// Serve static frontend files
 const FRONTEND = path.resolve(__dirname, '..', 'frontend');
-console.log('Frontend path:', FRONTEND);
+console.log('Frontend directory:', FRONTEND);
 app.use(express.static(FRONTEND));
 
-// API routes - my portfolio endpoints
-app.use('/api/auth',     require('./routes/auth'));     // Login/logout
-app.use('/api/projects', require('./routes/projects')); // Portfolio projects
+// API routes - portfolio endpoints
+app.use('/api/auth',     require('./routes/auth'));     // Authentication
+app.use('/api/projects', require('./routes/projects')); // Project management
 app.use('/api/contact',  require('./routes/contact'));  // Contact form
-app.use('/api/tasks',    require('./routes/tasks'));    // Task management
+app.use('/api/tasks',    require('./routes/tasks'));    // Task system
 
 // Admin panel routes
 app.get('/admin', (_req, res) => res.sendFile(path.join(FRONTEND, 'admin.html')));
 app.get('/panel', (_req, res) => res.sendFile(path.join(FRONTEND, 'panel.html')));
 
-// Catch all - serve the main portfolio
+// Catch all route - serve main portfolio
 app.get('*', (_req, res) => res.sendFile(path.join(FRONTEND, 'index.html')));
 
-// Start server if running directly
+// Start server when run directly
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
-    console.log(`\n Portfolio server running!`);
+    console.log(`\n Portfolio server started successfully!`);
     console.log(` Local:   http://localhost:${PORT}`);
-    console.log(` Ready to receive requests! \n`);
+    console.log(` Ready to handle requests! \n`);
   });
 }
 

@@ -1,22 +1,22 @@
-// Projects API - Manage portfolio projects
+// Projects API - Portfolio Management
 const router = require('express').Router();
 const auth = require('../middleware/auth');
 const supabase = require('../supabase');
 
-// Get all projects for portfolio display
+// Get all projects for portfolio
 router.get('/', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('projects')
       .select('*')
-      .order('order_idx', { ascending: true })  // Custom order first
+      .order('order_idx', { ascending: true })  // Custom order priority
       .order('created_at', { ascending: false }); // Newest first
     
     if (error) throw error;
     res.json(data);
   } catch (err) {
-    console.error('Error fetching projects:', err);
-    res.status(500).json({ error: 'Something went wrong fetching projects' });
+    console.error('Failed to fetch projects:', err);
+    res.status(500).json({ error: 'Unable to retrieve projects' });
   }
 });
 
@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
 router.post('/', auth, async (req, res) => {
   const { title, description, tech, github_url, live_url, featured, order_idx } = req.body;
   
-  // Basic validation - title is mandatory
+  // Input validation
   if (!title || title.trim() === '') {
     return res.status(400).json({ error: 'Project title is required' });
   }
@@ -49,8 +49,8 @@ router.post('/', auth, async (req, res) => {
     if (error) throw error;
     res.status(201).json(data);
   } catch (err) {
-    console.error('Error creating project:', err);
-    res.status(500).json({ error: 'Could not create project' });
+    console.error('Project creation failed:', err);
+    res.status(500).json({ error: 'Failed to create project' });
   }
 });
 
@@ -79,8 +79,8 @@ router.put('/:id', auth, async (req, res) => {
     if (error) throw error;
     res.json(data);
   } catch (err) {
-    console.error('Error updating project:', err);
-    res.status(500).json({ error: 'Could not update project' });
+    console.error('Project update failed:', err);
+    res.status(500).json({ error: 'Failed to update project' });
   }
 });
 
@@ -95,25 +95,25 @@ router.delete('/:id', auth, async (req, res) => {
     if (error) throw error;
     res.json({ message: 'Project deleted successfully' });
   } catch (err) {
-    console.error('Error deleting project:', err);
-    res.status(500).json({ error: 'Could not delete project' });
+    console.error('Project deletion failed:', err);
+    res.status(500).json({ error: 'Failed to delete project' });
   }
 });
 
-// Seed database with sample projects (dev helper)
+// Seed database with sample projects (development)
 router.post('/seed', async (req, res) => {
   try {
-    // Check if we already have projects
+    // Check if projects already exist
     const { count } = await supabase.from('projects').select('*', { count: 'exact', head: true });
     if (count > 0) {
-      return res.json({ message: 'Database already has projects - skipping seed' });
+      return res.json({ message: 'Projects already exist - skipping seed' });
     }
 
-    // My actual projects - these are real!
-    const myProjects = [
+    // Sample projects data
+    const sampleProjects = [
       {
         title: 'AnimeClips Online',
-        description: 'My first big project - a full anime community website with custom video player, search, blog, and membership features. Built completely from scratch with vanilla JS.',
+        description: 'Full anime community website with custom video player, search, blog, and membership features. Built from scratch with vanilla JavaScript.',
         tech: 'HTML,CSS,JavaScript',
         github_url: 'https://github.com/EliasOulkadi/animeclips-online',
         live_url: 'https://animeonline-lime.vercel.app/index.html',
@@ -122,7 +122,7 @@ router.post('/seed', async (req, res) => {
       },
       {
         title: 'Portfolio CMS',
-        description: 'This very portfolio! Full-stack app with Node.js API, JWT auth, Supabase DB, and admin panel. I built it to showcase my skills and manage my projects.',
+        description: 'This portfolio! Full-stack application with Node.js API, JWT authentication, Supabase database, and admin panel. Built to showcase skills and manage projects.',
         tech: 'Node.js,Express,Supabase,JWT,SQL,HTML,CSS,JavaScript',
         github_url: 'https://github.com/EliasOulkadi',
         live_url: '',
@@ -131,7 +131,7 @@ router.post('/seed', async (req, res) => {
       },
       {
         title: 'REST API with JWT Auth',
-        description: 'Clean REST API I built to learn authentication. Full CRUD, JWT tokens, validation, and proper error handling. Connected to Supabase PostgreSQL.',
+        description: 'Clean REST API built for learning authentication. Full CRUD operations, JWT tokens, input validation, and error handling. Connected to Supabase PostgreSQL.',
         tech: 'Node.js,Express,JWT,SQL,Supabase',
         github_url: 'https://github.com/EliasOulkadi',
         live_url: '',
@@ -140,17 +140,17 @@ router.post('/seed', async (req, res) => {
       }
     ];
 
-    const { error } = await supabase.from('projects').insert(myProjects);
+    const { error } = await supabase.from('projects').insert(sampleProjects);
     if (error) throw error;
     
     res.status(201).json({ 
-      message: 'Sample projects added successfully!', 
-      count: myProjects.length,
-      projects: myProjects.map(p => p.title)
+      message: 'Sample projects created successfully!', 
+      count: sampleProjects.length,
+      projects: sampleProjects.map(p => p.title)
     });
   } catch (err) {
-    console.error('Seeding error:', err);
-    res.status(500).json({ error: 'Failed to seed projects' });
+    console.error('Database seeding failed:', err);
+    res.status(500).json({ error: 'Failed to seed database' });
   }
 });
 

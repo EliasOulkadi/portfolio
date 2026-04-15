@@ -1,6 +1,6 @@
 # Full Stack Portfolio - Elias Oulkadi
 
-> **Personal portfolio with Node.js/Express backend and vanilla JavaScript frontend**
+> **Personal portfolio with Node.js/Express backend API and vanilla JavaScript frontend**
 > 
 > A project showcasing my Full Stack development skills, built from scratch without frontend frameworks.
 
@@ -10,8 +10,8 @@ This is my professional portfolio where I demonstrate my technical capabilities 
 
 ### **Key Features**
 
-- **Vanilla Frontend**: HTML5, CSS3, JavaScript ES6+ (no React, Vue, or Angular)
-- **REST API Backend**: Node.js + Express with JWT authentication
+- **Frontend**: Pure HTML5, CSS3, Vanilla JavaScript ES6+ (no frameworks)
+- **Backend API**: Node.js + Express with JWT authentication
 - **Database**: Supabase (PostgreSQL)
 - **Deployment**: Vercel with serverless functions
 - **Responsive Design**: Mobile-first with CSS Grid and Flexbox
@@ -151,7 +151,7 @@ http://localhost:3000
 ## **Why This Architecture?**
 
 ### **Vanilla JavaScript Frontend**
-I wanted to prove I can build complex applications without framework dependencies. It helps me better understand web development fundamentals.
+I wanted to demonstrate that I can build complex applications without framework dependencies. The frontend uses pure HTML5, CSS3, and JavaScript ES6+ to showcase fundamental web development skills.
 
 ### **Node.js + Express**
 Most popular stack for JavaScript backend. Express is minimal but powerful, perfect for a REST API.
@@ -193,7 +193,7 @@ Designed API following RESTful principles with custom middleware for rate limiti
 
 ## **Contact**
 
-- **Email**: elias.oulkadi@example.com
+- **Email**: oulkadielias8@icloud.com
 - **GitHub**: [@eliasoulkadi](https://github.com/eliasoulkadi)
 - **Portfolio**: [portafolio-elias-snowy.vercel.app](https://portafolio-elias-snowy.vercel.app)
 
