@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Elias Oulkadi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-box">
+
+      <div id="login-view">
+        <p class="auth-title">// Admin Login</p>
+        <p class="auth-sub">Portfolio CMS</p>
+        <div class="alert alert-error" id="login-err"></div>
+        <form id="login-form">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="l-email" required autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="l-password" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="login-btn">Login</button>
+        </form>
+        <p class="auth-toggle">No account? <a id="go-register">Register</a></p>
+      </div>
+
+      <div id="register-view" style="display:none">
+        <p class="auth-title">// Register</p>
+        <p class="auth-sub">Create admin account</p>
+        <div class="alert alert-error" id="reg-err"></div>
+        <form id="reg-form">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="r-name" required autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="r-email" required autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="r-password" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="reg-btn">Register</button>
+        </form>
+        <p class="auth-toggle">Already have an account? <a id="go-login">Login</a></p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem('admin_token')) {
+      window.location.href = '/panel';
+    }
+
+    document.getElementById('go-register').addEventListener('click', () => {
+      document.getElementById('login-view').style.display = 'none';
+      document.getElementById('register-view').style.display = 'block';
+    });
+
+    document.getElementById('go-login').addEventListener('click', () => {
+      document.getElementById('register-view').style.display = 'none';
+      document.getElementById('login-view').style.display = 'block';
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const err = document.getElementById('login-err');
+      const btn = document.getElementById('login-btn');
+      err.classList.remove('show');
+      btn.disabled = true;
+      btn.textContent = 'Logging in...';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('l-email').value,
+            password: document.getElementById('l-password').value
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        localStorage.setItem('admin_token', data.token);
+        localStorage.setItem('admin_user', JSON.stringify(data.user));
+        window.location.href = '/panel';
+      } catch (ex) {
+        err.textContent = ex.message;
+        err.classList.add('show');
+        btn.disabled = false;
+        btn.textContent = 'Login';
+      }
+    });
+
+    document.getElementById('reg-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const err = document.getElementById('reg-err');
+      const btn = document.getElementById('reg-btn');
+      err.classList.remove('show');
+      btn.disabled = true;
+      btn.textContent = 'Registering...';
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: document.getElementById('r-name').value,
+            email: document.getElementById('r-email').value,
+            password: document.getElementById('r-password').value
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        localStorage.setItem('admin_token', data.token);
+        localStorage.setItem('admin_user', JSON.stringify(data.user));
+        window.location.href = '/panel';
+      } catch (ex) {
+        err.textContent = ex.message;
+        err.classList.add('show');
+        btn.disabled = false;
+        btn.textContent = 'Register';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel — Elias Oulkadi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<div class="panel-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">E. OULKADI // CMS</div>
+    <ul class="sidebar-nav">
+      <li><a href="#" class="active" data-view="overview">Overview</a></li>
+      <li><a href="#" data-view="tasks">Tasks <span class="badge" id="badge-tasks">0</span></a></li>
+      <li><a href="#" data-view="projects">Projects <span class="badge" id="badge-projects">0</span></a></li>
+      <li><a href="#" data-view="messages">Messages <span class="badge" id="badge-messages">0</span></a></li>
+      <li><a href="/" style="margin-top:8px;border-top:1px solid rgba(255,255,255,0.06);padding-top:16px">↗ View Site</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <p class="sidebar-user" id="sidebar-user"></p>
+      <button class="btn btn-outline btn-sm" id="logout-btn">Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="panel-main">
+    <div class="panel-topbar">
+      <h1 id="topbar-title">Overview</h1>
+      <div id="topbar-actions"></div>
+    </div>
+
+    <div class="panel-body">
+
+      <!-- VIEW: OVERVIEW -->
+      <div class="view active" id="view-overview">
+        <div class="stats-row" id="overview-stats">
+          <div class="stat-card"><p class="stat-label">Projects</p><p class="stat-value" id="stat-projects">—</p></div>
+          <div class="stat-card"><p class="stat-label">Tasks</p><p class="stat-value" id="stat-tasks">—</p></div>
+          <div class="stat-card"><p class="stat-label">Pending Tasks</p><p class="stat-value" id="stat-pending">—</p></div>
+          <div class="stat-card"><p class="stat-label">Messages</p><p class="stat-value" id="stat-messages">—</p></div>
+          <div class="stat-card"><p class="stat-label">Unread</p><p class="stat-value" id="stat-unread">—</p></div>
+        </div>
+        <div class="section-block">
+          <div class="section-block-header">
+            <span class="section-block-title">Recent Messages</span>
+            <button class="btn btn-outline btn-sm" onclick="switchView('messages')">View all</button>
+          </div>
+          <table class="data-table">
+            <thead><tr><th></th><th>Name</th><th>Email</th><th>Date</th></tr></thead>
+            <tbody id="overview-msgs-body"><tr class="empty-row"><td colspan="4">// loading...</td></tr></tbody>
+          </table>
+        </div>
+        <div class="section-block">
+          <div class="section-block-header">
+            <span class="section-block-title">Recent Tasks</span>
+            <button class="btn btn-outline btn-sm" onclick="switchView('tasks')">View all</button>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Title</th><th>Status</th><th>Priority</th><th>Due</th></tr></thead>
+            <tbody id="overview-tasks-body"><tr class="empty-row"><td colspan="4">// loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VIEW: TASKS -->
+      <div class="view" id="view-tasks">
+        <div class="section-block">
+          <div class="section-block-header">
+            <span class="section-block-title">All Tasks</span>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <div class="filter-tabs" id="task-filters">
+                <button class="filter-tab active" data-status="all">All</button>
+                <button class="filter-tab" data-status="pending">Pending</button>
+                <button class="filter-tab" data-status="in-progress">In Progress</button>
+                <button class="filter-tab" data-status="completed">Done</button>
+              </div>
+              <button class="btn btn-primary btn-sm" id="new-task-btn">+ New Task</button>
+            </div>
+          </div>
+          <div class="quick-add-wrap">
+            <span class="quick-add-prefix">+</span>
+            <input type="text" id="quick-task-input" class="quick-add-input" placeholder="Type task title and press Enter to add..." />
+          </div>
+          <table class="data-table" id="tasks-table">
+            <thead>
+              <tr>
+                <th style="width:32px">#</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Due</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tasks-body">
+              <tr class="empty-row"><td colspan="6">// loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VIEW: PROJECTS -->
+      <div class="view" id="view-projects">
+        <div class="section-block">
+          <div class="section-block-header">
+            <span class="section-block-title">All Projects</span>
+            <button class="btn btn-primary btn-sm" id="new-project-btn">+ New Project</button>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>#</th><th>Title</th><th>Tech Stack</th><th>Links</th><th>Actions</th></tr></thead>
+            <tbody id="projects-body"><tr class="empty-row"><td colspan="5">// loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VIEW: MESSAGES -->
+      <div class="view" id="view-messages">
+        <div class="section-block">
+          <div class="section-block-header">
+            <span class="section-block-title">Contact Messages</span>
+          </div>
+          <table class="data-table">
+            <thead><tr><th></th><th>Name</th><th>Email</th><th>Preview</th><th>Date</th></tr></thead>
+            <tbody id="messages-body"><tr class="empty-row"><td colspan="5">// loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL: TASK -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="task-modal-title">New Task</span>
+      <button class="modal-close" onclick="document.getElementById('task-modal').classList.remove('open')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-error" id="task-err"></div>
+      <input type="hidden" id="task-id" />
+      <div class="form-group"><label>Title *</label><input type="text" id="t-title" required /></div>
+      <div class="form-group"><label>Description</label><textarea id="t-desc" placeholder="Optional notes..."></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="form-group">
+          <label>Status</label>
+          <select id="t-status">
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Priority</label>
+          <select id="t-priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Due Date</label><input type="date" id="t-due" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('task-modal').classList.remove('open')">Cancel</button>
+      <button class="btn btn-primary" id="save-task-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: PROJECT -->
+<div class="modal-overlay" id="project-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="project-modal-title">New Project</span>
+      <button class="modal-close" onclick="document.getElementById('project-modal').classList.remove('open')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-error" id="project-err"></div>
+      <input type="hidden" id="project-id" />
+      <div class="form-group"><label>Title *</label><input type="text" id="p-title" required /></div>
+      <div class="form-group"><label>Description</label><textarea id="p-desc" placeholder="What is this project?"></textarea></div>
+      <div class="form-group"><label>Tech Stack (comma separated)</label><input type="text" id="p-tech" placeholder="Node.js, Express, Supabase, JWT" /></div>
+      <div class="form-group"><label>GitHub URL</label><input type="url" id="p-github" placeholder="https://github.com/..." /></div>
+      <div class="form-group"><label>Live URL</label><input type="url" id="p-live" placeholder="https://..." /></div>
+      <div class="form-group"><label>Order (lower = first)</label><input type="number" id="p-order" value="0" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('project-modal').classList.remove('open')">Cancel</button>
+      <button class="btn btn-primary" id="save-project-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: MESSAGE DETAIL -->
+<div class="modal-overlay" id="msg-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="msg-modal-title">Message</span>
+      <button class="modal-close" onclick="document.getElementById('msg-modal').classList.remove('open')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">FROM</p>
+      <p id="msg-from" style="margin-bottom:16px;font-weight:600"></p>
+      <p style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">EMAIL</p>
+      <p id="msg-email" style="margin-bottom:16px;color:rgba(255,255,255,0.7)"></p>
+      <p style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">MESSAGE</p>
+      <div class="msg-text" id="msg-text"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('msg-modal').classList.remove('open')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

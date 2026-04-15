@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-mark">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+      <span class="sidebar-name">TaskFlow</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+
+      <button class="nav-link active" id="nav-overview">
+        <span class="nav-link-inner">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Overview
+        </span>
+        <span class="nav-badge" id="badge-total">0</span>
+      </button>
+
+      <button class="nav-link" id="nav-tasks">
+        <span class="nav-link-inner">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          All Tasks
+        </span>
+        <span class="nav-badge" id="badge-tasks">0</span>
+      </button>
+
+      <button class="nav-link" id="nav-pending">
+        <span class="nav-link-inner">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+          Pending
+        </span>
+        <span class="nav-badge" id="badge-pending">0</span>
+      </button>
+
+      <button class="nav-link" id="nav-inprogress">
+        <span class="nav-link-inner">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+          In Progress
+        </span>
+        <span class="nav-badge" id="badge-progress">0</span>
+      </button>
+
+      <div class="nav-section-label" style="margin-top:0.5rem;">Priority</div>
+
+      <button class="nav-link" id="nav-urgent">
+        <span class="nav-link-inner">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          <span style="color:var(--danger)">Urgent</span>
+        </span>
+        <span class="nav-badge" id="badge-urgent">0</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar" id="user-avatar">?</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="user-name">Loading...</div>
+        <div class="sidebar-user-meta">member</div>
+      </div>
+      <button class="icon-btn danger" id="logout-btn" title="Sign out">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ────────────────────────────────────────────────────── -->
+  <div class="main">
+
+    <header class="topbar">
+      <span class="topbar-crumb" id="crumb">taskflow / <span>overview</span></span>
+
+      <div class="search-field" id="search-wrap">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="search-input" placeholder="Search tasks..." />
+        <span class="kbd">/</span>
+      </div>
+
+      <button class="theme-btn" id="theme-btn" title="Toggle theme">
+        <svg id="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+        <svg id="icon-sun" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 0 0 0-1.41l-1.06-1.06zm1.06-12.37l-1.06 1.06a.996.996 0 0 0 0 1.41c.39.39 1.03.39 1.41 0l1.06-1.06a.996.996 0 0 0 0-1.41c-.38-.39-1.02-.39-1.41 0zM7.05 18.36l-1.06 1.06a.996.996 0 0 0 0 1.41c.39.39 1.03.39 1.41 0l1.06-1.06a.996.996 0 0 0 0-1.41c-.38-.39-1.02-.39-1.41 0z"/></svg>
+      </button>
+    </header>
+
+    <main class="content">
+
+      <!-- ── OVERVIEW VIEW ──────────────────────────────────────── -->
+      <div id="view-overview">
+
+        <div class="stats-row">
+          <div class="stat-cell">
+            <div class="stat-num" id="s-total">—</div>
+            <div class="stat-label">Total</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num clr-warning" id="s-pending">—</div>
+            <div class="stat-label">Pending</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num clr-info" id="s-progress">—</div>
+            <div class="stat-label">In Progress</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num clr-success" id="s-done">—</div>
+            <div class="stat-label">Completed</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num clr-danger" id="s-overdue">—</div>
+            <div class="stat-label">Overdue</div>
+          </div>
+        </div>
+
+        <div class="progress-row">
+          <span class="progress-label">Completion</span>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="completion-bar" style="width:0%"></div>
+          </div>
+          <span class="progress-pct" id="completion-pct">0%</span>
+        </div>
+
+        <div class="chart-section">
+          <div class="chart-box">
+            <div class="chart-box-title">Distribution</div>
+            <div class="chart-canvas-wrap">
+              <canvas id="dist-chart"></canvas>
+            </div>
+          </div>
+          <div class="bar-stats">
+            <div class="bar-row">
+              <span class="bar-row-label">Pending</span>
+              <div class="bar-track"><div class="bar-fill pending" id="bar-pending" style="width:0%"></div></div>
+              <span class="bar-row-val" id="bv-pending">0</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-row-label">In Progress</span>
+              <div class="bar-track"><div class="bar-fill progress" id="bar-progress" style="width:0%"></div></div>
+              <span class="bar-row-val" id="bv-progress">0</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-row-label">Completed</span>
+              <div class="bar-track"><div class="bar-fill completed" id="bar-completed" style="width:0%"></div></div>
+              <span class="bar-row-val" id="bv-completed">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent tasks preview -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Recent</span>
+            <button class="btn btn-ghost btn-sm" id="view-all-btn">View all →</button>
+          </div>
+          <div id="recent-tasks-list">
+            <div class="loading-row"><div class="spinner"></div> loading</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── TASKS VIEW ─────────────────────────────────────────── -->
+      <div id="view-tasks" style="display:none;">
+
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title" id="tasks-view-title">All Tasks</span>
+            <div class="filter-bar" id="status-filters">
+              <button class="filter-pill active" data-status="all">All</button>
+              <button class="filter-pill" data-status="pending">Pending</button>
+              <button class="filter-pill" data-status="in-progress">In Progress</button>
+              <button class="filter-pill" data-status="completed">Completed</button>
+              <div class="filter-sep"></div>
+              <button class="filter-pill" data-priority="all" id="pf-all">Any priority</button>
+              <button class="filter-pill" data-priority="urgent">Urgent</button>
+              <button class="filter-pill" data-priority="high">High</button>
+              <button class="filter-pill" data-priority="medium">Medium</button>
+              <button class="filter-pill" data-priority="low">Low</button>
+            </div>
+            <button class="btn btn-primary btn-sm" id="new-task-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+              New task
+            </button>
+          </div>
+
+          <!-- Bulk action bar -->
+          <div class="bulk-bar" id="bulk-bar">
+            <span class="bulk-count" id="bulk-count">0 selected</span>
+            <button class="btn btn-danger btn-sm" id="bulk-delete-btn">Delete selected</button>
+            <button class="btn btn-ghost btn-sm" id="bulk-clear-btn">Clear</button>
+          </div>
+
+          <!-- Quick add -->
+          <div class="quick-add">
+            <span class="quick-add-prefix">+ add</span>
+            <input type="text" id="quick-add-input" placeholder="Type a task title and press Enter..." />
+            <span class="quick-add-hint"><span class="kbd">↵</span> to create</span>
+          </div>
+
+          <!-- Column headers -->
+          <div class="task-col-header">
+            <span></span>
+            <span></span>
+            <span class="col-id">id</span>
+            <span style="padding-left:0.75rem;">title</span>
+            <span>status</span>
+            <span class="col-priority">priority</span>
+            <span class="col-due">due</span>
+            <span></span>
+          </div>
+
+          <div class="task-list" id="task-list">
+            <div class="loading-row"><div class="spinner"></div> loading tasks</div>
+          </div>
+
+          <div class="shortcuts-hint">
+            <span><span class="kbd">N</span> new task</span>
+            <span><span class="kbd">/</span> search</span>
+            <span><span class="kbd">Esc</span> close modal</span>
+            <span>Click status to cycle</span>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ── TASK MODAL ─────────────────────────────────────────────────── -->
+<div class="overlay" id="task-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-head-title" id="modal-label">New task</span>
+      <button class="icon-btn" id="modal-close-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <form id="task-form">
+      <div class="modal-body">
+        <input type="hidden" id="edit-id" />
+        <div class="field">
+          <label for="f-title">Title *</label>
+          <input type="text" id="f-title" placeholder="What needs to be done?" required />
+        </div>
+        <div class="field">
+          <label for="f-desc">Description</label>
+          <textarea id="f-desc" placeholder="Add context or notes..."></textarea>
+        </div>
+        <div class="form-row-2">
+          <div class="field">
+            <label for="f-status">Status</label>
+            <select id="f-status">
+              <option value="pending">Pending</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-priority">Priority</label>
+            <select id="f-priority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-due">Due date</label>
+          <input type="date" id="f-due" />
+        </div>
+      </div>
+      <div class="modal-foot">
+        <div id="modal-delete-area"></div>
+        <div class="modal-foot-right">
+          <button type="button" class="btn btn-ghost btn-sm" id="modal-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm" id="modal-submit-btn">Create task</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script src="js/dashboard.js"></script>
+<script src="js/tasks.js"></script>
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elias Oulkadi — Full Stack Developer</title>
+  <meta name="description" content="Self-taught Full Stack Developer. Node.js, Express, React, Supabase, REST APIs, JWT." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/portfolio.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <span class="nav-logo">E.OULKADI</span>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Projects</a></li>
+      <li><a href="#api-explorer">API</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-login-btn" id="nav-login-btn">Login</button>
+      <a href="#contact" class="nav-cta">Hire me</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobile-nav">
+    <ul>
+      <li><a href="#about" class="mobile-link">About</a></li>
+      <li><a href="#work" class="mobile-link">Projects</a></li>
+      <li><a href="#api-explorer" class="mobile-link">API</a></li>
+      <li><a href="#stack" class="mobile-link">Stack</a></li>
+      <li><a href="#contact" class="mobile-link">Contact</a></li>
+    </ul>
+    <a href="#contact" class="btn btn-primary mobile-link" style="margin-top:32px;align-self:flex-start">Hire me</a>
+  </div>
+
+  <!-- SIDE PANEL -->
+  <div class="sp-backdrop" id="sp-backdrop"></div>
+  <aside class="side-panel" id="side-panel" aria-hidden="true">
+    <div class="sp-header">
+      <span class="sp-title" id="sp-title">// auth</span>
+      <button class="sp-close" id="sp-close" aria-label="Close">✕</button>
+    </div>
+    <div class="sp-tabs" id="sp-tabs">
+      <button class="sp-tab active" data-tab="login">Login</button>
+      <button class="sp-tab" data-tab="register">Register</button>
+    </div>
+    <div class="sp-body">
+
+      <div id="sp-login-view">
+        <p class="sp-sub">Real JWT auth — login, get a token, hit protected endpoints. Credentials pre-filled.</p>
+        <form class="sp-form" id="sp-form" autocomplete="off">
+          <div class="form-group">
+            <label for="sp-email">Email</label>
+            <input type="email" id="sp-email" value="demo@oulkadi.dev" />
+          </div>
+          <div class="form-group">
+            <label for="sp-password">Password</label>
+            <input type="password" id="sp-password" value="demo1234" />
+          </div>
+          <p class="sp-err" id="sp-err"></p>
+          <button type="submit" class="btn btn-primary" id="sp-submit">Login</button>
+        </form>
+        <p class="sp-hint">// POST /api/auth/login → JWT → /api/tasks</p>
+      </div>
+
+      <div id="sp-register-view" style="display:none">
+        <p class="sp-sub">Create an account — password hashed with bcrypt, stored in Supabase.</p>
+        <form class="sp-form" id="sp-reg-form" autocomplete="off">
+          <div class="form-group">
+            <label for="sp-reg-name">Name</label>
+            <input type="text" id="sp-reg-name" placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label for="sp-reg-email">Email</label>
+            <input type="email" id="sp-reg-email" placeholder="you@example.com" />
+          </div>
+          <div class="form-group">
+            <label for="sp-reg-password">Password</label>
+            <input type="password" id="sp-reg-password" placeholder="Min. 6 characters" />
+          </div>
+          <p class="sp-err" id="sp-reg-err"></p>
+          <button type="submit" class="btn btn-primary" id="sp-reg-submit">Create Account</button>
+        </form>
+        <p class="sp-hint">// POST /api/auth/register → bcrypt hash → Supabase insert</p>
+      </div>
+
+      <div id="sp-profile-view" style="display:none">
+        <div class="sp-user-card">
+          <div class="sp-avatar" id="sp-avatar"></div>
+          <div class="sp-user-info">
+            <p class="sp-user-name" id="sp-user-name"></p>
+            <p class="sp-user-email" id="sp-user-email"></p>
+          </div>
+          <button class="sp-logout" id="sp-logout">logout</button>
+        </div>
+        <div class="sp-section-label">// tasks <span class="sp-task-count" id="sp-task-count"></span></div>
+        <form class="sp-add-form" id="sp-add-form">
+          <input type="text" class="sp-task-input" id="sp-task-input" placeholder="Add task..." />
+          <button type="submit" class="sp-add-btn">+</button>
+        </form>
+        <div class="sp-tasks-list" id="sp-tasks-list">
+          <p class="sp-loading">// loading tasks...</p>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="hero-label">
+      <span class="hero-status-dot"></span>
+      Available for work &nbsp;·&nbsp; Full Stack Developer
+    </p>
+    <div class="hero-name-block">
+      <h1 class="hero-name">ELIAS<br><span>OULKADI.</span></h1>
+      <p class="hero-role"><span id="typing-text"></span><span class="typing-cursor">|</span></p>
+    </div>
+    <p class="hero-desc">
+      I build web apps from backend to frontend — Node.js, Express, SQL, React.
+      Started in 2022 and haven't stopped. Hardware background means I read errors
+      properly instead of guessing.
+    </p>
+    <div class="hero-actions">
+      <a href="#work" class="btn btn-primary">View Projects</a>
+      <a href="#api-explorer" class="btn btn-outline">Live API ↓</a>
+      <a href="https://github.com/EliasOulkadi" target="_blank" rel="noopener" class="btn btn-outline">GitHub ↗</a>
+    </div>
+    <div class="hero-live-stats" id="hero-stats">
+      <div class="live-stat">
+        <span class="live-stat-val" id="ls-projects">—</span>
+        <span class="live-stat-label">projects in DB</span>
+      </div>
+      <div class="live-stat">
+        <span class="live-stat-val" id="ls-messages">—</span>
+        <span class="live-stat-label">messages received</span>
+      </div>
+      <div class="live-stat">
+        <span class="live-stat-val" id="ls-api">live</span>
+        <span class="live-stat-label">API status</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header" data-reveal>
+      <span class="section-label">00</span>
+      <h2 class="section-title">About</h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="about-grid" data-reveal>
+      <div class="about-text">
+        <p>
+          I started learning to code because I wanted to understand how things I used every day actually worked.
+          That turned into months working through freeCodeCamp, The Odin Project, Udemy and Cisco NetAcad —
+          always building something alongside to make it click.
+        </p>
+        <p>
+          My background is different from most devs. I've repaired motherboards, fixed electric scooter ECUs,
+          and edited videos that hit tens of thousands of views. That kind of work teaches you to troubleshoot
+          properly and not panic when something breaks — which carries directly into writing code.
+        </p>
+        <p>
+          Right now I'm focused on Node.js, Express, SQL on Supabase and React.
+          Also putting time into web security on TryHackMe — it's something I genuinely enjoy.
+        </p>
+      </div>
+      <div class="about-facts">
+        <div class="fact-item">
+          <span class="fact-label">Location</span>
+          <span class="fact-val">Spain</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Focus</span>
+          <span class="fact-val">Full Stack JS</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Learning since</span>
+          <span class="fact-val">2022</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Status</span>
+          <span class="fact-val">Open to work</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Languages</span>
+          <span class="fact-val">ES · EN · CA · FR · AR · Darija · Rifi · IT</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Email</span>
+          <a href="mailto:oulkadielias8@icloud.com" class="fact-val fact-link">oulkadielias8@icloud.com</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="section-header" data-reveal>
+      <span class="section-label">01</span>
+      <h2 class="section-title">Projects</h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="project-filters" id="project-filters" data-reveal></div>
+    <div class="projects-grid" id="projects-grid">
+      <div class="projects-empty">// loading projects...</div>
+    </div>
+  </section>
+
+  <!-- API EXPLORER -->
+  <section id="api-explorer">
+    <div class="section-header" data-reveal>
+      <span class="section-label">02</span>
+      <h2 class="section-title">Live API</h2>
+      <span class="section-line"></span>
+    </div>
+    <p class="api-intro" data-reveal>
+      This site runs on a real Node.js + Express API with JWT authentication and a PostgreSQL
+      database on Supabase. Hit Run — these are live requests, not mocked responses.
+    </p>
+
+    <div class="api-grid" data-reveal>
+
+      <div class="api-card" id="req-projects">
+        <div class="api-card-header">
+          <div class="api-endpoint">
+            <span class="api-method get">GET</span>
+            <span class="api-path">/api/projects</span>
+          </div>
+          <div class="api-meta" id="meta-projects"></div>
+          <button class="api-run-btn" onclick="runRequest('projects')">Run ▶</button>
+        </div>
+        <div class="api-desc">Returns all projects stored in the database. Public endpoint — no auth required.</div>
+        <div class="api-response-wrap">
+          <div class="api-response" id="resp-projects"><span class="api-placeholder">// click Run to execute</span></div>
+          <button class="copy-btn" onclick="copyResp('projects')">copy</button>
+        </div>
+      </div>
+
+      <div class="api-card" id="req-contact">
+        <div class="api-card-header">
+          <div class="api-endpoint">
+            <span class="api-method post">POST</span>
+            <span class="api-path">/api/contact</span>
+          </div>
+          <div class="api-meta" id="meta-contact"></div>
+          <button class="api-run-btn" onclick="runRequest('contact')">Run ▶</button>
+        </div>
+        <div class="api-desc">Submits a contact message. Validates input, saves to Supabase and returns the created record ID.</div>
+        <div class="api-request-body">
+          <span class="api-body-label">Request body</span>
+          <pre class="api-body-pre">{
+  "name": "Jane Recruiter",
+  "email": "jane@company.com",
+  "message": "We'd like to talk about a position."
+}</pre>
+        </div>
+        <div class="api-response-wrap">
+          <div class="api-response" id="resp-contact"><span class="api-placeholder">// click Run to execute</span></div>
+          <button class="copy-btn" onclick="copyResp('contact')">copy</button>
+        </div>
+      </div>
+
+      <div class="api-card" id="req-login">
+        <div class="api-card-header">
+          <div class="api-endpoint">
+            <span class="api-method post">POST</span>
+            <span class="api-path">/api/auth/login</span>
+          </div>
+          <div class="api-meta" id="meta-login"></div>
+          <button class="api-run-btn" onclick="runRequest('login')">Run ▶</button>
+        </div>
+        <div class="api-desc">Authenticates a user. Returns a signed JWT token used to access protected endpoints.</div>
+        <div class="api-request-body">
+          <span class="api-body-label">Request body (demo account)</span>
+          <pre class="api-body-pre">{
+  "email": "demo@oulkadi.dev",
+  "password": "demo1234"
+}</pre>
+        </div>
+        <div class="api-response-wrap">
+          <div class="api-response" id="resp-login"><span class="api-placeholder">// click Run to execute</span></div>
+          <button class="copy-btn" onclick="copyResp('login')">copy</button>
+        </div>
+      </div>
+
+      <div class="api-card api-card-protected" id="req-tasks">
+        <div class="api-card-header">
+          <div class="api-endpoint">
+            <span class="api-method get">GET</span>
+            <span class="api-path">/api/tasks</span>
+            <span class="api-auth-badge">JWT required</span>
+          </div>
+          <div class="api-meta" id="meta-tasks"></div>
+          <button class="api-run-btn" onclick="runRequest('tasks')" id="btn-tasks">Run ▶</button>
+        </div>
+        <div class="api-desc">Returns tasks for the authenticated user. Requires a valid JWT in the Authorization header. Run Login first.</div>
+        <div class="api-response-wrap">
+          <div class="api-response" id="resp-tasks"><span class="api-placeholder">// login first to get a JWT, then run this</span></div>
+          <button class="copy-btn" onclick="copyResp('tasks')">copy</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="api-demo-cta" data-reveal>
+      <p>There's a full admin panel behind authentication — CRUD for tasks, projects and messages.</p>
+      <div class="api-demo-cta-actions">
+        <a href="admin.html" class="btn btn-primary">Open Admin Panel ↗</a>
+        <span class="demo-creds">demo@oulkadi.dev &nbsp;/&nbsp; demo1234</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack">
+    <div class="section-header" data-reveal>
+      <span class="section-label">03</span>
+      <h2 class="section-title">Stack</h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="stack-grid" data-reveal>
+      <div class="stack-group">
+        <p class="stack-group-label">Frontend</p>
+        <ul class="stack-items">
+          <li class="stack-item">HTML &amp; CSS</li>
+          <li class="stack-item">JavaScript (ES6+)</li>
+          <li class="stack-item">React</li>
+          <li class="stack-item">Responsive Design</li>
+        </ul>
+      </div>
+      <div class="stack-group">
+        <p class="stack-group-label">Backend</p>
+        <ul class="stack-items">
+          <li class="stack-item">Node.js</li>
+          <li class="stack-item">Express</li>
+          <li class="stack-item">REST APIs</li>
+          <li class="stack-item">JWT Auth</li>
+        </ul>
+      </div>
+      <div class="stack-group">
+        <p class="stack-group-label">Database</p>
+        <ul class="stack-items">
+          <li class="stack-item">SQL</li>
+          <li class="stack-item">Supabase / PostgreSQL</li>
+          <li class="stack-item">Data Modeling</li>
+          <li class="stack-item">CRUD Operations</li>
+        </ul>
+      </div>
+      <div class="stack-group">
+        <p class="stack-group-label">Tools</p>
+        <ul class="stack-items">
+          <li class="stack-item">Git &amp; GitHub</li>
+          <li class="stack-item">Vercel / Render</li>
+          <li class="stack-item">Linux / Windows</li>
+          <li class="stack-item">VS Code</li>
+        </ul>
+      </div>
+      <div class="stack-group">
+        <p class="stack-group-label">Security</p>
+        <ul class="stack-items">
+          <li class="stack-item">OWASP Fundamentals</li>
+          <li class="stack-item">Burp Suite</li>
+          <li class="stack-item">Endpoint Testing</li>
+          <li class="stack-item">TryHackMe</li>
+        </ul>
+      </div>
+      <div class="stack-group">
+        <p class="stack-group-label">Creative</p>
+        <ul class="stack-items">
+          <li class="stack-item">DaVinci Resolve</li>
+          <li class="stack-item">Adobe Premiere / AE</li>
+          <li class="stack-item">Photoshop</li>
+          <li class="stack-item">Cinema 4D</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="courses">
+    <div class="section-header" data-reveal>
+      <span class="section-label">04</span>
+      <h2 class="section-title">Education</h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="courses-grid" data-reveal>
+      <div class="course-group">
+        <p class="course-group-label">freeCodeCamp</p>
+        <div class="course-list">
+          <div class="course-item">
+            <span class="course-name">JavaScript Algorithms &amp; Data Structures</span>
+            <span class="course-tag">Certification</span>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Back End Development &amp; APIs</span>
+            <span class="course-tag">Certification</span>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Relational Database</span>
+            <span class="course-tag">Certification</span>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Information Security</span>
+            <span class="course-tag">Certification</span>
+          </div>
+        </div>
+      </div>
+      <div class="course-group">
+        <p class="course-group-label">The Odin Project</p>
+        <div class="course-list">
+          <div class="course-item">
+            <span class="course-name">Full Stack JavaScript Path</span>
+            <span class="course-tag">Course</span>
+          </div>
+        </div>
+      </div>
+      <div class="course-group">
+        <p class="course-group-label">Udemy</p>
+        <div class="course-list">
+          <div class="course-item">
+            <span class="course-name">React Developer Course</span>
+            <span class="course-tag">Course</span>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Node.js and Express</span>
+            <span class="course-tag">Course</span>
+          </div>
+        </div>
+      </div>
+      <div class="course-group">
+        <p class="course-group-label">Other</p>
+        <div class="course-list">
+          <div class="course-item">
+            <span class="course-name">Introduction to Networks</span>
+            <span class="course-tag">Cisco NetAcad</span>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Cybersecurity Training Path</span>
+            <span class="course-tag">TryHackMe</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="section-header" data-reveal>
+      <span class="section-label">05</span>
+      <h2 class="section-title">Experience</h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="exp-list" data-reveal>
+      <div class="exp-item">
+        <div class="exp-left">
+          <p class="exp-role">Electric Mobility Repair Tech</p>
+          <p class="exp-meta">Batteries · Electronics · Motors</p>
+        </div>
+        <ul class="exp-points">
+          <li>Diagnosed and repaired batteries, ECUs and electric motors</li>
+          <li>Identified and resolved hardware failures in electric systems</li>
+          <li>Preventive and corrective maintenance of mobility devices</li>
+        </ul>
+      </div>
+      <div class="exp-item">
+        <div class="exp-left">
+          <p class="exp-role">PC Hardware Technician</p>
+          <p class="exp-meta">Build · Repair · Diagnose</p>
+        </div>
+        <ul class="exp-points">
+          <li>Built, dismantled and serviced desktop computers</li>
+          <li>Diagnosed hardware failures across components and peripherals</li>
+          <li>Advanced knowledge of system architecture and components</li>
+        </ul>
+      </div>
+      <div class="exp-item">
+        <div class="exp-left">
+          <p class="exp-role">Video Editor &amp; Digital Creator</p>
+          <p class="exp-meta">DaVinci · Premiere · After Effects</p>
+        </div>
+        <ul class="exp-points">
+          <li>Advanced editing with professional production tools</li>
+          <li>Content optimised for social media — tens of thousands of views</li>
+          <li>Full pipeline: capture → edit → colour → export</li>
+        </ul>
+      </div>
+      <div class="exp-item">
+        <div class="exp-left">
+          <p class="exp-role">Customer Support (Internship)</p>
+          <p class="exp-meta">120 hours</p>
+        </div>
+        <ul class="exp-points">
+          <li>Direct client-facing support and incident resolution</li>
+          <li>Query management and support in a professional environment</li>
+          <li>Developed communication and organisational skills</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header" data-reveal>
+      <span class="section-label">06</span>
+      <h2 class="section-title">Contact</h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="contact-inner">
+      <div class="contact-info" data-reveal>
+        <h3>Got something<br>in mind?</h3>
+        <p>Looking for a junior full-stack role. Also open to freelance or interesting projects — I reply fast.</p>
+        <div class="contact-links">
+          <a href="mailto:oulkadielias8@icloud.com" class="contact-link">
+            <span class="contact-link-label">Email</span>
+            oulkadielias8@icloud.com
+          </a>
+          <a href="https://github.com/EliasOulkadi" target="_blank" rel="noopener" class="contact-link">
+            <span class="contact-link-label">GitHub</span>
+            github.com/EliasOulkadi
+          </a>
+          <a href="https://linkedin.com/in/elias-oulkadi" target="_blank" rel="noopener" class="contact-link">
+            <span class="contact-link-label">LinkedIn</span>
+            linkedin.com/in/elias-oulkadi
+          </a>
+        </div>
+      </div>
+      <form class="contact-form" id="contact-form" data-reveal>
+        <div class="form-group">
+          <label for="cf-name">Name</label>
+          <input type="text" id="cf-name" placeholder="John Doe" autocomplete="off" required />
+        </div>
+        <div class="form-group">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" placeholder="john@example.com" autocomplete="off" required />
+        </div>
+        <div class="form-group">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" placeholder="Tell me about your project or opportunity..." required></textarea>
+        </div>
+        <div id="form-status" class="form-status"></div>
+        <button type="submit" class="btn btn-primary" id="form-submit">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">&copy; <span id="year"></span> Elias Oulkadi Zadbag</div>
+    <div class="footer-right">Designed &amp; built by Elias Oulkadi Zadbag</div>
+  </footer>
+
+  <script src="js/portfolio.js"></script>
+</body>
+</html>
