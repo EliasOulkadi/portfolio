@@ -4,22 +4,24 @@ const auth = require('../middleware/auth');
 const supabase = require('../supabase');
 
 // Get all projects for portfolio
+const FALLBACK_PROJECTS = [
+  { title: 'Cyberian', description: 'API Quality Scanner — 6 dimensions, 35+ checks, CI/CD ready', tech: 'Next.js,TypeScript,Supabase,Stripe,Tailwind', github_url: 'https://github.com/EliasOulkadi', live_url: 'https://cyberian.online', featured: true },
+  { title: 'AnimeClips Online', description: 'Anime community site with custom video player and search', tech: 'HTML,CSS,JavaScript', github_url: 'https://github.com/EliasOulkadi/animeclips-online', live_url: 'https://animeonline-lime.vercel.app/index.html', featured: true },
+  { title: 'Portfolio CMS', description: 'Full-stack portfolio with Node.js API, JWT auth, Supabase', tech: 'Node.js,Express,Supabase,JWT', github_url: 'https://github.com/EliasOulkadi/portfolio', live_url: '', featured: true },
+  { title: 'PromptBook', description: 'Local AI prompt manager — save, search, copy', tech: 'CSS,JavaScript,Electron', github_url: 'https://github.com/EliasOulkadi/promptbook', live_url: '', featured: false },
+  { title: 'Whendone', description: 'Desktop notification when CLI commands finish', tech: 'JavaScript', github_url: 'https://github.com/EliasOulkadi/whendone', live_url: '', featured: false },
+  { title: 'Image Quality Enhancer', description: 'AI image upscaling and enhancement prompts', tech: 'AI,Python', github_url: 'https://github.com/EliasOulkadi/image-quality-enhancer-prompt', live_url: '', featured: false }
+];
+
 router.get('/', async (req, res) => {
   try {
-    let { data, error } = await supabase.from('projects').select('*');
-    if (error) {
-      data = [
-        { title: 'Cyberian', description: 'API Quality Scanner — 6 dimensions, 35+ checks, CI/CD ready', tech: 'Next.js,TypeScript,Supabase,Stripe,Tailwind', github_url: 'https://github.com/EliasOulkadi', live_url: 'https://cyberian.online', featured: true },
-        { title: 'AnimeClips Online', description: 'Anime community site with custom video player and search', tech: 'HTML,CSS,JavaScript', github_url: 'https://github.com/EliasOulkadi/animeclips-online', live_url: 'https://animeonline-lime.vercel.app/index.html', featured: true },
-        { title: 'Portfolio CMS', description: 'Full-stack portfolio with Node.js API, JWT auth, Supabase', tech: 'Node.js,Express,Supabase,JWT', github_url: 'https://github.com/EliasOulkadi/portfolio', live_url: '', featured: true },
-        { title: 'PromptBook', description: 'Local AI prompt manager — save, search, copy', tech: 'CSS,JavaScript,Electron', github_url: 'https://github.com/EliasOulkadi/promptbook', live_url: '', featured: false },
-        { title: 'Whendone', description: 'Desktop notification when CLI commands finish', tech: 'JavaScript', github_url: 'https://github.com/EliasOulkadi/whendone', live_url: '', featured: false }
-      ];
-      return res.json(data);
+    const { data, error } = await supabase.from('projects').select('*');
+    if (error || !data || data.length === 0) {
+      return res.json(FALLBACK_PROJECTS);
     }
-    res.json(data || []);
+    res.json(data);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to load projects' });
+    res.json(FALLBACK_PROJECTS);
   }
 });
 
