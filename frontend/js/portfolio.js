@@ -93,23 +93,10 @@ function renderProjects() {
   const grid = document.getElementById('projects-grid');
   const filtered = _activeTag === 'all'
     ? _allProjects
-    : _allProjects.filter(p => p.tech && p.tech.split(',').map(t => t.trim()).includes(_activeTag));
+    : _allProjects.filter(p => p.tech && p.tech.split(',').map(t => t.trim().toLowerCase()).includes(_activeTag));
 
   if (!filtered.length) {
-    const emptyMessages = {
-      'all': '// no projects yet — check back soon',
-      'html': '// no HTML projects yet',
-      'css': '// no CSS projects yet',
-      'javascript': '// no JavaScript projects yet',
-      'node.js': '// no Node.js projects yet',
-      'express': '// no Express projects yet',
-      'react': '// no React projects yet',
-      'sql': '// no SQL projects yet',
-      'supabase': '// no Supabase projects yet',
-      'jwt': '// no JWT projects yet'
-    };
-    const message = emptyMessages[_activeTag] || `// no projects tagged "${_activeTag}" yet`;
-    grid.innerHTML = `<div class="projects-empty">${message}</div>`;
+    grid.innerHTML = `<div class="projects-empty">// no projects tagged "${_activeTag}" yet</div>`;
     return;
   }
 
@@ -158,8 +145,13 @@ function buildFilters(projects) {
   const filtersEl = document.getElementById('project-filters');
   if (!filtersEl) return;
 
-  // Solo mostrar el filtro "All" para mantenerlo limpio y profesional
-  filtersEl.innerHTML = '<button class="filter-btn active" data-tag="all">All</button>';
+  const tagSet = new Set();
+  projects.forEach(p => (p.tech || '').split(',').map(t => t.trim().toLowerCase()).filter(Boolean).forEach(t => tagSet.add(t)));
+  const tags = ['all', ...tagSet];
+
+  filtersEl.innerHTML = tags.map(t =>
+    `<button class="filter-btn${t === 'all' ? ' active' : ''}" data-tag="${t}">${t}</button>`
+  ).join('');
 
   filtersEl.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -171,42 +163,29 @@ function buildFilters(projects) {
   });
 }
 
-async function loadProjects() {
+function loadProjects() {
   const grid = document.getElementById('projects-grid');
-  try {
-    const res = await fetch('/api/projects');
-    _allProjects = await res.json();
+  _allProjects = PROJECTS;
 
-    if (!_allProjects.length) {
-      grid.innerHTML = '<div class="projects-empty">// no projects yet — more coming soon!</div>';
-      return;
-    }
-
-    buildFilters(_allProjects);
-    renderProjects();
-  } catch {
-    grid.innerHTML = '<div class="projects-empty">// unable to load projects — refresh to try again</div>';
+  if (!_allProjects.length) {
+    grid.innerHTML = '<div class="projects-empty">// no projects yet — more coming soon!</div>';
+    return;
   }
+
+  buildFilters(_allProjects);
+  renderProjects();
 }
 
 /* ── LIVE STATS ── */
 async function loadLiveStats() {
+  const lsProj = document.getElementById('ls-projects');
+  const lsMsg  = document.getElementById('ls-messages');
+  if (lsProj) countUp(lsProj, PROJECTS.length);
   try {
-    const [projRes, contactRes] = await Promise.all([
-      fetch('/api/projects'),
-      fetch('/api/contact/count')
-    ]);
-    const lsProj = document.getElementById('ls-projects');
-    const lsMsg  = document.getElementById('ls-messages');
-
-    if (projRes.ok) {
-      const projects = await projRes.json();
-      if (lsProj) countUp(lsProj, projects.length);
-    }
-    if (contactRes.ok) {
-      const data = await contactRes.json();
-      const count = data.count ?? 0;
-      if (lsMsg) countUp(lsMsg, count);
+    const res = await fetch('/api/contact/count');
+    if (res.ok) {
+      const data = await res.json();
+      if (lsMsg) countUp(lsMsg, data.count ?? 0);
     }
   } catch {}
 }
@@ -683,6 +662,37 @@ window.addEventListener('scroll', () => {
   _annRaf = requestAnimationFrame(updateAnnotations);
 }, { passive: true });
 window.addEventListener('resize', updateAnnotations);
+
+/* ── PARALLAX HERO ── */
+document.addEventListener('scroll', () => {
+  const hero = document.querySelector('#hero');
+  if (!hero) return;
+  const scrolled = window.scrollY;
+  const heroName = hero.querySelector('.hero-name');
+  if (heroName && scrolled < window.innerHeight) {
+    heroName.style.transform = `translateY(${scrolled * 0.15}px)`;
+    heroName.style.opacity = 1 - (scrolled / (window.innerHeight * 0.8));
+  }
+}, { passive: true });
+
+/* ── PROJECT CARD 3D TILT ── */
+document.addEventListener('mousemove', (e) => {
+  const cards = document.querySelectorAll('.project-card.featured');
+  cards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 20;
+    const rotateY = (centerX - x) / 20;
+    if (x > 0 && x < rect.width && y > 0 && y < rect.height) {
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    } else {
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+    }
+  });
+});
 
 /* ── INIT ── */
 loadProjects();

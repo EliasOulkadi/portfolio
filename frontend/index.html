@@ -9,14 +9,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/portfolio.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
+  <div class="grain-overlay"></div>
 
   <!-- NAV -->
   <nav id="main-nav">
     <span class="nav-logo">E.OULKADI</span>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
+      <li><a href="#featured">Featured</a></li>
       <li><a href="#work">Projects</a></li>
       <li><a href="#api-explorer">API</a></li>
       <li><a href="#stack">Stack</a></li>
@@ -35,6 +38,7 @@
   <div class="mobile-nav" id="mobile-nav">
     <ul>
       <li><a href="#about" class="mobile-link">About</a></li>
+      <li><a href="#featured" class="mobile-link">Featured</a></li>
       <li><a href="#work" class="mobile-link">Projects</a></li>
       <li><a href="#api-explorer" class="mobile-link">API</a></li>
       <li><a href="#stack" class="mobile-link">Stack</a></li>
@@ -200,6 +204,66 @@
         <div class="fact-item">
           <span class="fact-label">Email</span>
           <a href="mailto:oulkadielias8@icloud.com" class="fact-val fact-link">oulkadielias8@icloud.com</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED: CYBERIAN -->
+  <section id="featured">
+    <div class="section-header" data-reveal>
+      <span class="section-label">✦</span>
+      <h2 class="section-title">Featured Project</h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="featured-card" data-reveal>
+      <div class="featured-bg"></div>
+      <div class="featured-content">
+        <div class="featured-badge">Live Product</div>
+        <h3 class="featured-title">Cyberian — API Quality Scanner</h3>
+        <p class="featured-desc">Analyze any REST endpoint and get a clear quality score across 6 dimensions. Includes CLI, CI/CD integration, and AI-powered deep analysis.</p>
+        <div class="featured-stats">
+          <div class="featured-stat">
+            <span class="featured-stat-val">6</span>
+            <span class="featured-stat-label">Score Dimensions</span>
+          </div>
+          <div class="featured-stat">
+            <span class="featured-stat-val">35+</span>
+            <span class="featured-stat-label">Quality Checks</span>
+          </div>
+          <div class="featured-stat">
+            <span class="featured-stat-val">&lt;45s</span>
+            <span class="featured-stat-label">Avg Scan Time</span>
+          </div>
+        </div>
+        <div class="featured-tech">
+          <span>Next.js</span><span>TypeScript</span><span>Supabase</span><span>Stripe</span><span>Tailwind</span>
+        </div>
+        <div class="featured-actions">
+          <a href="https://cyberian.online" target="_blank" rel="noopener" class="btn btn-primary">Visit Site →</a>
+          <a href="https://github.com/EliasOulkadi" target="_blank" rel="noopener" class="btn btn-outline">Source Code</a>
+        </div>
+      </div>
+      <div class="featured-preview">
+        <div class="featured-preview-frame">
+          <div class="fp-header">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="fp-body">
+            <div class="fp-line fp-short"></div>
+            <div class="fp-line fp-med"></div>
+            <div class="fp-score">
+              <div class="fp-score-ring">
+                <svg viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="42" class="fp-ring-bg"/>
+                  <circle cx="50" cy="50" r="42" class="fp-ring-fill" stroke-dasharray="264" stroke-dashoffset="53"/>
+                </svg>
+                <span class="fp-score-val">87</span>
+              </div>
+            </div>
+            <div class="fp-line fp-long"></div>
+            <div class="fp-line fp-med"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -561,6 +625,7 @@
     <div class="footer-right">Designed &amp; built by Elias Oulkadi Zadbag</div>
   </footer>
 
+  <script src="js/projects-data.js"></script>
   <script src="js/portfolio.js"></script>
 </body>
 </html>
